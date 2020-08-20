@@ -11,7 +11,7 @@ var tool_button: ToolButton
 var warning_rules = {}
 
 
-func _enter_tree():
+func _enter_tree() -> void:
 	
 	_load_warning_rules()
 	
@@ -22,18 +22,19 @@ func _enter_tree():
 	# connect to signals for updating warning list
 	connect("scene_changed", self, "_on_scene_changed")
 	get_editor_interface().get_inspector().connect("property_edited", self, "_on_property_edited")
+	get_tree().connect("tree_changed", self, "_on_tree_changed")
 	
 	# initially update warning list
 	check_current_scene()
 
 
-func _exit_tree():
+func _exit_tree() -> void:
 	# remove warning list from bottom dock
 	remove_control_from_bottom_panel(warning_list)
 
 
 # save current rules to custom rules file
-func _save_warning_rules():
+func _save_warning_rules() -> void:
 	var file = File.new()
 	var err = file.open(custom_warning_rules_file, File.WRITE)
 	if err != OK:
@@ -44,7 +45,7 @@ func _save_warning_rules():
 
 
 # load rule from file
-func _load_warning_rules(filename = custom_warning_rules_file):
+func _load_warning_rules(filename: String = custom_warning_rules_file) -> void:
 	var file = File.new()
 	if !file.file_exists(filename):
 		filename = default_warning_rules_file
@@ -61,11 +62,15 @@ func _load_warning_rules(filename = custom_warning_rules_file):
 
 
 # Update warning list when a property is edited
-func _on_property_edited(property):
+func _on_property_edited(property: String) -> void:
 	check_current_scene()
 
 # Update warning list when scene is changed
 func _on_scene_changed(new_scene: Node) -> void:
+	check_current_scene()
+
+# Update warning list when tree is modified
+func _on_tree_changed() -> void:
 	check_current_scene()
 
 
@@ -84,7 +89,7 @@ func check_current_scene() -> void:
 
 
 # select corresponding node when a warning was selected
-func _on_WarningList_warning_selected(metadata):
+func _on_WarningList_warning_selected(metadata: Dictionary):
 	var node = metadata["node"]
 	var property = metadata["rule"]["property"]
 	

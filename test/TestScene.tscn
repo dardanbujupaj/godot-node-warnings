@@ -6,8 +6,7 @@
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 
+[node name="RayCast2D" type="RayCast2D" parent="KinematicBody2D"]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
 shape = SubResource( 1 )
-disabled = true
-
-[node name="RayCast2D" type="RayCast2D" parent="KinematicBody2D"]
