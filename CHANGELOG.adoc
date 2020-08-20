@@ -1,0 +1,5 @@
+= Changelog
+
+== 1.0.0
+* Initial release
+* Warning-list showing a fixed set of common critical node-property configurations
