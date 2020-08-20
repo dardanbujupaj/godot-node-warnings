@@ -1,5 +1,8 @@
 = Changelog
 
+== 1.0.1
+* Exclude default_env and showcase folder from export 
+
 == 1.0.0
 * Initial release
 * Warning-list showing a fixed set of common critical node-property configurations
