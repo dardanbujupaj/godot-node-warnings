@@ -37,7 +37,17 @@ The description is shown as a tooltip when hovering over the warning.
 ----
 
 
-== Use custom warning rules
+=== Current default rules
+* CollisionPolygon2D: disabled
+* CollisionPolygon: disabled
+* CollisionShape2D: disabled
+* CollisionShape: disabled
+* RayCast2D: enable
+* RayCast: enable
+
+
+=== Use custom warning rules
 1. Copy the file `res://addons/dardanbujupaj.node_warnings/default_warning_rules.json` to `res://.node_warning_rules.json`
 2. Edit/add/remove rules in your favorite text editor
 3. Reload the plugin
+

@@ -34,13 +34,6 @@
 			"description": "CollisionShapes will not collide while disabled."
 		}
 	],
-	"CollisionPolygon2D": [
-		{
-			"property": "disabled",
-			"critical_value": true,
-			"description": "CollisionShapes will not collide while disabled."
-		}
-	],
 	"CollisionShape2D": [
 		{
 			"property": "disabled",
