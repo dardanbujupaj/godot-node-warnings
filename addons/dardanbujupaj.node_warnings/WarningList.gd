@@ -7,9 +7,9 @@ signal warning_selected
 
 var warnings: Array = [] setget _set_warnings
 
-onready var item_list = $ItemList
-onready var filter = $Toolbar/Filter
-onready var warning_count = $Toolbar/WarningCount
+onready var item_list: ItemList = $ItemList
+onready var filter: LineEdit = $Toolbar/Filter
+onready var warning_count: Label = $Toolbar/WarningCount
 
 
 func _set_warnings(new_warnings: Array):
@@ -30,7 +30,7 @@ func _update_warning_list():
 		var text = node.name + ": {property} == {critical_value}".format(warning["rule"])
 		if filter.text == "" or filter.text in text:
 			var index = item_list.get_item_count()
-			item_list.add_item(text, preload("./NodeWarning.svg"))
+			item_list.add_item(text, preload("./NodeWarning.svg"), true)
 			item_list.set_item_tooltip(index, warning["rule"]["description"])
 			item_list.set_item_metadata(index, warning)
 

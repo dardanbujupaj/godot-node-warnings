@@ -22,7 +22,11 @@ func _enter_tree() -> void:
 	# connect to signals for updating warning list
 	connect("scene_changed", self, "_on_scene_changed")
 	get_editor_interface().get_inspector().connect("property_edited", self, "_on_property_edited")
-	get_tree().connect("tree_changed", self, "_on_tree_changed")
+	
+	# connect to updates to scene tree
+	get_tree().connect("node_added", self, "_on_node_changed")
+	get_tree().connect("node_removed", self, "_on_node_changed")
+	get_tree().connect("node_renamed", self, "_on_node_changed")
 	
 	# initially update warning list
 	check_current_scene()
@@ -65,27 +69,34 @@ func _load_warning_rules(filename: String = custom_warning_rules_file) -> void:
 func _on_property_edited(property: String) -> void:
 	check_current_scene()
 
+
 # Update warning list when scene is changed
 func _on_scene_changed(new_scene: Node) -> void:
 	check_current_scene()
 
+
 # Update warning list when tree is modified
-func _on_tree_changed() -> void:
-	check_current_scene()
+func _on_node_changed(node: Node) -> void:
+	var edited_scene = get_editor_interface().get_edited_scene_root()
+	
+	if edited_scene != null and edited_scene.is_a_parent_of(node):
+		check_current_scene()
+
 
 
 # check all nodes in the current scene for rule violations
 func check_current_scene() -> void:
 	
 	var warnings = _check_for_possible_errors(get_editor_interface().get_edited_scene_root())
-
+	
 	# update warning list
 	warning_list.warnings = warnings
 	
-	if len(warnings) > 0:
-		tool_button.icon = preload("res://addons/dardanbujupaj.node_warnings/NodeWarning.svg")
-	else:
-		tool_button.icon = null
+	if tool_button != null:
+		if len(warnings) > 0:
+			tool_button.icon = preload("res://addons/dardanbujupaj.node_warnings/NodeWarning.svg")
+		else:
+			tool_button.icon = null
 
 
 # select corresponding node when a warning was selected

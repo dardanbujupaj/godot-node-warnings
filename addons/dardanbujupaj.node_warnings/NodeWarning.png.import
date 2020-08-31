@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/warning_list.png-8d4c756d93056123fcba698fd93d4f96.stex"
+path="res://.import/NodeWarning.png-ca3571ce55a371cf05b052c6d05cdaf1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://showcase/warning_list.png"
-dest_files=[ "res://.import/warning_list.png-8d4c756d93056123fcba698fd93d4f96.stex" ]
+source_file="res://addons/dardanbujupaj.node_warnings/NodeWarning.png"
+dest_files=[ "res://.import/NodeWarning.png-ca3571ce55a371cf05b052c6d05cdaf1.stex" ]
 
 [params]
 
