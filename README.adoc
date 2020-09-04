@@ -8,6 +8,7 @@ This plugin shows you a list of possible errors, caused by configuration of Node
 2. Enable the Plugin in Project -> Project Settings -> Plugins
 3. Open a Scene from your project
 4. Check for warnings in the bottom dock
+5. Click on a warning in the list to jump to its corresponding node
 
 image::showcase/warning_list.png[Warning List]
 
