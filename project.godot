@@ -17,6 +17,10 @@ _global_script_class_icons={
 
 config/name="godot-node-warnings"
 
+[audio]
+
+default_bus_layout=""
+
 [editor_plugins]
 
 enabled=PoolStringArray( "dardanbujupaj.node_warnings" )

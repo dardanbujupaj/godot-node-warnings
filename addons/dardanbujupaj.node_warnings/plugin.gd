@@ -12,6 +12,7 @@ var warning_rules = {}
 
 
 func _enter_tree() -> void:
+	print(get_editor_interface().get_base_control().get_icon("Load", "EditorIcons"))
 	
 	_load_warning_rules()
 	
