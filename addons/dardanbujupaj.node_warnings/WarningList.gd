@@ -62,9 +62,11 @@ func setup_tree():
 		item.set_editable(0, true)
 		item.set_text(0, node)
 		item.set_icon(0, get_icon(node, "EditorIcons"))
-		item.set_custom_bg_color(0, Color.black)
-		get_color()
-		item.set_custom_bg_color(1, Color.black)
+		item.add_button(1, get_icon("GuiClose", "EditorIcons"))
+		
+		var category_color = get_color("prop_category", "Editor")
+		item.set_custom_bg_color(0, category_color)
+		item.set_custom_bg_color(1, category_color)
 		
 		var property = tree.create_item(item)
 		property.set_text(0, "Property")
