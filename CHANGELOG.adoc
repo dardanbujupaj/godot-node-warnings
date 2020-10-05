@@ -1,5 +1,9 @@
 = Changelog
 
+== 1.0.2
+* Fix error, where list items are not shown as selected
+* Add asset icon as png
+
 == 1.0.1
 * Exclude default_env and showcase folder from export 
 
