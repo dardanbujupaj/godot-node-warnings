@@ -7,18 +7,25 @@ const default_warning_rules_file = "res://addons/dardanbujupaj.node_warnings/def
 
 
 var warning_list: Control
+var rule_list: Control
+var panel: Control
 var tool_button: ToolButton
 var warning_rules = {}
 
 
 func _enter_tree() -> void:
-	print(get_editor_interface().get_base_control().get_icon("Load", "EditorIcons"))
-	
 	_load_warning_rules()
 	
 	warning_list = preload("res://addons/dardanbujupaj.node_warnings/WarningList.tscn").instance()
 	warning_list.connect("warning_selected", self, "_on_WarningList_warning_selected")
-	tool_button = add_control_to_bottom_panel(warning_list, "Warning List")
+	
+	rule_list = preload("res://addons/dardanbujupaj.node_warnings/RuleList.tscn").instance()
+	
+	panel = HSplitContainer.new()
+	panel.add_child(warning_list)
+	panel.add_child(rule_list)
+	
+	tool_button = add_control_to_bottom_panel(panel, "Warning List")
 	
 	# connect to signals for updating warning list
 	connect("scene_changed", self, "_on_scene_changed")

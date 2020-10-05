@@ -1,9 +1,10 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/dardanbujupaj.node_warnings/WarningList.gd" type="Script" id=1]
+[ext_resource path="res://addons/dardanbujupaj.node_warnings/RuleList.gd" type="Script" id=1]
 
-[node name="WarningList" type="VBoxContainer"]
-margin_right = 506.0
+[node name="RuleList" type="VBoxContainer"]
+margin_left = 518.0
+margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -16,14 +17,14 @@ __meta__ = {
 margin_right = 506.0
 margin_bottom = 24.0
 
-[node name="WarningCount" type="Label" parent="Toolbar"]
+[node name="WarningRules" type="Label" parent="Toolbar"]
 margin_top = 5.0
-margin_right = 71.0
+margin_right = 88.0
 margin_bottom = 19.0
-text = "0 Warnings"
+text = "Warning rules"
 
 [node name="Filter" type="LineEdit" parent="Toolbar"]
-margin_left = 75.0
+margin_left = 92.0
 margin_right = 430.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -41,17 +42,20 @@ margin_right = 506.0
 margin_bottom = 24.0
 text = "Edit rules"
 
-[node name="ItemList" type="ItemList" parent="."]
+[node name="Tree" type="Tree" parent="."]
 margin_top = 28.0
 margin_right = 506.0
 margin_bottom = 600.0
-rect_min_size = Vector2( 0, 70 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-items = [ "Item 0", null, false, "Item 1", null, false, "Item 2", null, false ]
-allow_reselect = true
-allow_rmb_select = true
+columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
+
+[node name="ClassPopupMenu" type="PopupMenu" parent="."]
+margin_right = 20.0
+margin_bottom = 20.0
+[connection signal="text_changed" from="Toolbar/Filter" to="." method="_on_Filter_text_changed"]
+[connection signal="custom_popup_edited" from="Tree" to="." method="_on_Tree_custom_popup_edited"]
+[connection signal="index_pressed" from="ClassPopupMenu" to="." method="_on_ClassPopupMenu_index_pressed"]
