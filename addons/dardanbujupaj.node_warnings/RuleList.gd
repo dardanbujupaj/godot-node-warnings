@@ -1,6 +1,7 @@
 tool
 extends VBoxContainer
 
+var warning_rules: Dictionary
 
 onready var class_popup: PopupMenu = $ClassPopupMenu
 
@@ -21,34 +22,46 @@ func setup_tree():
 	
 	var default_nodes = ["Node2D", "RayCast"]
 	
-	
-	for node in default_nodes:
-	
+	for node in warning_rules.keys():
 		var item = tree.create_item(root)
-		item.set_cell_mode(0, TreeItem.CELL_MODE_CUSTOM)
-		item.set_editable(0, true)
+		#item.set_cell_mode(0, TreeItem.CELL_MODE_CUSTOM)
+		#item.set_editable(0, true)
 		item.set_text(0, node)
 		item.set_icon(0, get_icon(node, "EditorIcons"))
-		item.add_button(1, get_icon("GuiClose", "EditorIcons"))
+		item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+		
 		
 		var category_color = get_color("prop_category", "Editor")
 		item.set_custom_bg_color(0, category_color)
 		item.set_custom_bg_color(1, category_color)
 		
-		var property = tree.create_item(item)
-		property.set_text(0, "Property")
-		property.set_editable(1, true)
-		property.set_text(1, "position")
 		
-		var value = tree.create_item(item)
-		value.set_text(0, "Value")
-		value.set_editable(1, true)
-		value.set_text(1, "1")
-	
+		for rule in warning_rules[node]:
+			
+			var rule_item = tree.create_item(item)
+			rule_item.set_text(0, rule['property'])
+			rule_item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+			
+			var section_color = get_color("prop_section", "Editor")
+			rule_item.set_custom_bg_color(0, section_color)
+			rule_item.set_custom_bg_color(1, section_color)
+			
+			
+			var value = tree.create_item(rule_item)
+			value.set_text(0, "Critical value")
+			value.set_tooltip(0, "When property equals this value, a warning will be shown")
+			value.set_editable(1, true)
+			value.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
+			value.set_checked(1, rule['critical_value'])
+			
+			var description = tree.create_item(rule_item)
+			description.set_text(0, "Description")
+			description.set_tooltip(0, "Description of the rule")
+			description.set_editable(1, true)
+			description.set_text(1, rule["description"])
 
-	
 
-# is called when a class is selected
+# is called when a class is selected for a ruleset
 func _on_Tree_custom_popup_edited(arrow_clicked):
 	
 	class_popup.clear()
@@ -71,3 +84,7 @@ func _on_ClassPopupMenu_index_pressed(index):
 	tree.get_edited().set_text(0, class_popup.get_item_text(index))
 	tree.get_edited().set_icon(0, class_popup.get_item_icon(index))
 
+
+
+func _on_Tree_button_pressed(item, column, id):
+	item.free()

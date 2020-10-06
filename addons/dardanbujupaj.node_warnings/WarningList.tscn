@@ -3,8 +3,8 @@
 [ext_resource path="res://addons/dardanbujupaj.node_warnings/WarningList.gd" type="Script" id=1]
 
 [node name="WarningList" type="VBoxContainer"]
-margin_right = 506.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -13,7 +13,7 @@ __meta__ = {
 }
 
 [node name="Toolbar" type="HBoxContainer" parent="."]
-margin_right = 506.0
+margin_right = 1024.0
 margin_bottom = 24.0
 
 [node name="WarningCount" type="Label" parent="Toolbar"]
@@ -24,7 +24,7 @@ text = "0 Warnings"
 
 [node name="Filter" type="LineEdit" parent="Toolbar"]
 margin_left = 75.0
-margin_right = 430.0
+margin_right = 1024.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 clear_button_enabled = true
@@ -35,15 +35,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="EditRules" type="Button" parent="Toolbar"]
-margin_left = 434.0
-margin_right = 506.0
-margin_bottom = 24.0
-text = "Edit rules"
-
 [node name="ItemList" type="ItemList" parent="."]
 margin_top = 28.0
-margin_right = 506.0
+margin_right = 1024.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 0, 70 )
 size_flags_horizontal = 3

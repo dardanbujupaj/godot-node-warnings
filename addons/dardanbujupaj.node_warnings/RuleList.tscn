@@ -3,9 +3,8 @@
 [ext_resource path="res://addons/dardanbujupaj.node_warnings/RuleList.gd" type="Script" id=1]
 
 [node name="RuleList" type="VBoxContainer"]
-margin_left = 518.0
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -14,41 +13,30 @@ __meta__ = {
 }
 
 [node name="Toolbar" type="HBoxContainer" parent="."]
-margin_right = 506.0
-margin_bottom = 24.0
+margin_right = 1024.0
+margin_bottom = 20.0
 
 [node name="WarningRules" type="Label" parent="Toolbar"]
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 19.0
+margin_top = 3.0
+margin_right = 954.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
 text = "Warning rules"
 
-[node name="Filter" type="LineEdit" parent="Toolbar"]
-margin_left = 92.0
-margin_right = 430.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-clear_button_enabled = true
-placeholder_text = "Filter warnings"
-caret_blink = true
-caret_blink_speed = 0.5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EditRules" type="Button" parent="Toolbar"]
-margin_left = 434.0
-margin_right = 506.0
-margin_bottom = 24.0
-text = "Edit rules"
+[node name="AddRule" type="Button" parent="Toolbar"]
+margin_left = 958.0
+margin_right = 1024.0
+margin_bottom = 20.0
+text = "Add rule"
 
 [node name="Tree" type="Tree" parent="."]
-margin_top = 28.0
-margin_right = 506.0
+margin_top = 24.0
+margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
+hide_root = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -56,6 +44,6 @@ __meta__ = {
 [node name="ClassPopupMenu" type="PopupMenu" parent="."]
 margin_right = 20.0
 margin_bottom = 20.0
-[connection signal="text_changed" from="Toolbar/Filter" to="." method="_on_Filter_text_changed"]
+[connection signal="button_pressed" from="Tree" to="." method="_on_Tree_button_pressed"]
 [connection signal="custom_popup_edited" from="Tree" to="." method="_on_Tree_custom_popup_edited"]
 [connection signal="index_pressed" from="ClassPopupMenu" to="." method="_on_ClassPopupMenu_index_pressed"]

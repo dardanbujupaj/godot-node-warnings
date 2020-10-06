@@ -20,6 +20,7 @@ func _enter_tree() -> void:
 	warning_list.connect("warning_selected", self, "_on_WarningList_warning_selected")
 	
 	rule_list = preload("res://addons/dardanbujupaj.node_warnings/RuleList.tscn").instance()
+	rule_list.warning_rules = warning_rules
 	
 	panel = HSplitContainer.new()
 	panel.add_child(warning_list)
