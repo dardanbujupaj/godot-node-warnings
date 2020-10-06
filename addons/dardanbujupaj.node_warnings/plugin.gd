@@ -21,6 +21,8 @@ func _enter_tree() -> void:
 	
 	rule_list = preload("res://addons/dardanbujupaj.node_warnings/RuleList.tscn").instance()
 	rule_list.warning_rules = warning_rules
+	rule_list.connect("warning_rules_updated", self, "_on_warning_rules_updated")
+	rule_list.connect("warning_rules_reset", self, "_reset_warning_rules")
 	
 	panel = HSplitContainer.new()
 	panel.add_child(warning_list)
@@ -43,7 +45,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	# remove warning list from bottom dock
-	remove_control_from_bottom_panel(warning_list)
+	remove_control_from_bottom_panel(panel)
 
 
 # save current rules to custom rules file
@@ -73,6 +75,26 @@ func _load_warning_rules(filename: String = custom_warning_rules_file) -> void:
 		
 	file.close()
 
+# load rule from file
+func _reset_warning_rules() -> void:
+	print("reset rules")
+	var dir = Directory.new()
+	if dir.file_exists(custom_warning_rules_file):
+		var err = dir.remove(custom_warning_rules_file)
+	
+		if err != OK:
+			# TODO load default rules if tried to load custom
+			printerr("Could not delete rules. " + str(err))
+		else:
+			_load_warning_rules()
+			rule_list.warning_rules = warning_rules
+
+
+func _on_warning_rules_updated(new_rules):
+	print("rules updated")
+	warning_rules = new_rules
+	rule_list.warning_rules = new_rules
+	_save_warning_rules()
 
 # Update warning list when a property is edited
 func _on_property_edited(property: String) -> void:

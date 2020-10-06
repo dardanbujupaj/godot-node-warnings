@@ -1,7 +1,10 @@
 tool
 extends VBoxContainer
 
-var warning_rules: Dictionary
+signal warning_rules_updated
+signal warning_rules_reset
+
+var warning_rules: Dictionary setget _set_warning_rules
 
 onready var class_popup: PopupMenu = $ClassPopupMenu
 
@@ -92,11 +95,14 @@ func _on_ClassPopupMenu_index_pressed(index):
 	var category_color = get_color("prop_category", "Editor")
 	item.set_custom_bg_color(0, category_color)
 	item.set_custom_bg_color(1, category_color)
+	
+	_on_rules_updated()
 
 
 
 func _on_Tree_button_pressed(item, column, id):
 	item.free()
+	_on_rules_updated()
 
 
 func _on_AddRule_pressed():
@@ -111,3 +117,55 @@ func _on_AddRule_pressed():
 			class_popup.add_icon_item(icon, c)
 	class_popup.popup()
 	class_popup.set_position(get_global_mouse_position())
+
+
+func _set_warning_rules(new_rules):
+	warning_rules = new_rules
+	call_deferred("setup_tree")
+
+
+func _on_rules_updated():
+	var rules = get_rules_dictionary()
+	print(rules)
+	emit_signal("warning_rules_updated", rules)
+
+
+func get_rules_dictionary():
+	var dictionary = {}
+	
+	# iterate over rule node entries
+	var current_item = tree.get_root().get_children()
+	while current_item != null:
+		var rules = []
+		
+		# iterate over rules for this node
+		var current_rule = current_item.get_children()
+		while current_rule != null:
+			var property = current_rule.get_text(0)
+			var critical_value = current_rule.get_children().is_checked(1)
+			var description = current_rule.get_children().get_next().get_text(1)
+			
+			# add the rule to the list
+			rules.append({
+				"property": property,
+				"critical_value": critical_value,
+				"description": description
+			})
+			
+			current_rule = current_rule.get_next()
+		
+		dictionary[current_item.get_text(0)] = rules
+		
+		
+		
+		# get next sibling
+		current_item = current_item.get_next()
+	
+	return dictionary
+
+func _on_Tree_item_edited():
+	_on_rules_updated()
+
+
+func _on_ResetRules_pressed():
+	emit_signal("warning_rules_reset")

@@ -18,10 +18,16 @@ margin_bottom = 20.0
 
 [node name="WarningRules" type="Label" parent="Toolbar"]
 margin_top = 3.0
-margin_right = 954.0
+margin_right = 866.0
 margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "Warning rules"
+
+[node name="ResetRules" type="Button" parent="Toolbar"]
+margin_left = 870.0
+margin_right = 954.0
+margin_bottom = 20.0
+text = "Reset rules"
 
 [node name="AddRule" type="Button" parent="Toolbar"]
 margin_left = 958.0
@@ -44,7 +50,9 @@ __meta__ = {
 [node name="ClassPopupMenu" type="PopupMenu" parent="."]
 margin_right = 20.0
 margin_bottom = 20.0
+[connection signal="pressed" from="Toolbar/ResetRules" to="." method="_on_ResetRules_pressed"]
 [connection signal="pressed" from="Toolbar/AddRule" to="." method="_on_AddRule_pressed"]
 [connection signal="button_pressed" from="Tree" to="." method="_on_Tree_button_pressed"]
 [connection signal="custom_popup_edited" from="Tree" to="." method="_on_Tree_custom_popup_edited"]
+[connection signal="item_edited" from="Tree" to="." method="_on_Tree_item_edited"]
 [connection signal="index_pressed" from="ClassPopupMenu" to="." method="_on_ClassPopupMenu_index_pressed"]
