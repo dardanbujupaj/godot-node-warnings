@@ -88,6 +88,8 @@ func _reset_warning_rules() -> void:
 		else:
 			_load_warning_rules()
 			rule_list.warning_rules = warning_rules
+			
+			check_current_scene()
 
 
 func _on_warning_rules_updated(new_rules):
@@ -95,6 +97,7 @@ func _on_warning_rules_updated(new_rules):
 	warning_rules = new_rules
 	rule_list.warning_rules = new_rules
 	_save_warning_rules()
+	check_current_scene()
 
 # Update warning list when a property is edited
 func _on_property_edited(property: String) -> void:
