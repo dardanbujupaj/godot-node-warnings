@@ -44,6 +44,7 @@ __meta__ = {
 [node name="ClassPopupMenu" type="PopupMenu" parent="."]
 margin_right = 20.0
 margin_bottom = 20.0
+[connection signal="pressed" from="Toolbar/AddRule" to="." method="_on_AddRule_pressed"]
 [connection signal="button_pressed" from="Tree" to="." method="_on_Tree_button_pressed"]
 [connection signal="custom_popup_edited" from="Tree" to="." method="_on_Tree_custom_popup_edited"]
 [connection signal="index_pressed" from="ClassPopupMenu" to="." method="_on_ClassPopupMenu_index_pressed"]

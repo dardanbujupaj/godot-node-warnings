@@ -81,10 +81,33 @@ func _on_Tree_custom_popup_edited(arrow_clicked):
 # change icon and text if a new class was selected
 # TODO: change properties
 func _on_ClassPopupMenu_index_pressed(index):
-	tree.get_edited().set_text(0, class_popup.get_item_text(index))
-	tree.get_edited().set_icon(0, class_popup.get_item_icon(index))
+	
+	var item = tree.create_item(tree.get_root())
+	
+	item.set_text(0, class_popup.get_item_text(index))
+	item.set_icon(0, class_popup.get_item_icon(index))
+	item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+	
+	
+	var category_color = get_color("prop_category", "Editor")
+	item.set_custom_bg_color(0, category_color)
+	item.set_custom_bg_color(1, category_color)
 
 
 
 func _on_Tree_button_pressed(item, column, id):
 	item.free()
+
+
+func _on_AddRule_pressed():
+	class_popup.clear()
+	# TODO: remove classes where rules already exist
+	var classes: Array = ClassDB.get_inheriters_from_class("Node")
+	classes.append("Node")
+	classes.sort()
+	for c in classes:
+		if ClassDB.can_instance(c):
+			var icon = get_icon(c, "EditorIcons")
+			class_popup.add_icon_item(icon, c)
+	class_popup.popup()
+	class_popup.set_position(get_global_mouse_position())
