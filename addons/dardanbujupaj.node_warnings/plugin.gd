@@ -93,7 +93,6 @@ func _reset_warning_rules() -> void:
 
 
 func _on_warning_rules_updated(new_rules):
-	print("rules updated")
 	warning_rules = new_rules
 	rule_list.warning_rules = new_rules
 	_save_warning_rules()

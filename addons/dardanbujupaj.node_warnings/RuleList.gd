@@ -10,6 +10,9 @@ onready var class_popup: PopupMenu = $ClassPopupMenu
 
 onready var tree: Tree = $Tree
 
+onready var delete_texture = get_icon("Remove", "EditorIcons")
+onready var add_texture = get_icon("Add", "EditorIcons")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	setup_tree()
@@ -25,13 +28,15 @@ func setup_tree():
 	
 	var default_nodes = ["Node2D", "RayCast"]
 	
+	
 	for node in warning_rules.keys():
 		var item = tree.create_item(root)
 		#item.set_cell_mode(0, TreeItem.CELL_MODE_CUSTOM)
 		#item.set_editable(0, true)
 		item.set_text(0, node)
 		item.set_icon(0, get_icon(node, "EditorIcons"))
-		item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+		item.add_button(1, add_texture, -1, false, "Add a new rule for this class")
+		item.add_button(1, delete_texture, -1, false, "Remove rules for this class")
 		
 		
 		var category_color = get_color("prop_category", "Editor")
@@ -40,46 +45,60 @@ func setup_tree():
 		
 		
 		for rule in warning_rules[node]:
-			
-			var rule_item = tree.create_item(item)
-			rule_item.set_text(0, rule['property'])
-			rule_item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
-			
-			var section_color = get_color("prop_section", "Editor")
-			rule_item.set_custom_bg_color(0, section_color)
-			rule_item.set_custom_bg_color(1, section_color)
-			
-			
-			var value = tree.create_item(rule_item)
-			value.set_text(0, "Critical value")
-			value.set_tooltip(0, "When property equals this value, a warning will be shown")
-			value.set_editable(1, true)
-			value.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
-			value.set_checked(1, rule['critical_value'])
-			
-			var description = tree.create_item(rule_item)
-			description.set_text(0, "Description")
-			description.set_tooltip(0, "Description of the rule")
-			description.set_editable(1, true)
-			description.set_text(1, rule["description"])
+			add_rule(item, rule["property"], rule["critical_value"], rule["description"])
 
 
 # is called when a class is selected for a ruleset
 func _on_Tree_custom_popup_edited(arrow_clicked):
+	var property_popup = PopupMenu.new()
 	
-	class_popup.clear()
+	var property_item = tree.get_selected()
+	var class_item = property_item.get_parent()
+	
 	# TODO: remove classes where rules already exist
-	var classes: Array = ClassDB.get_inheriters_from_class("Node")
-	classes.append("Node")
-	classes.sort()
-	for c in classes:
-		if ClassDB.can_instance(c):
-			var icon = get_icon(c, "EditorIcons")
-			class_popup.add_icon_item(icon, c)
+	var properties = ClassDB.class_get_property_list(class_item.get_text(0), true)
+	properties.sort()
+	for property in properties:
+		property_popup.add_item(property["name"])
 		
 	# show popup to choose new class
-	class_popup.popup(tree.get_custom_popup_rect())
+	property_popup.connect("index_pressed", self, "_on_property_selected", [property_popup, property_item])
+	add_child(property_popup)
+	property_popup.popup(tree.get_custom_popup_rect())
 
+
+func _on_property_selected(index, property_popup, property_item):
+	var property = property_popup.get_item_text(index)
+	property_item.set_text(0, property)
+	property_popup.queue_free()
+	_on_rules_updated()
+
+
+func add_rule(class_item: TreeItem, property: String, critical_value: bool, description: String):
+	var rule_item = tree.create_item(class_item)
+	rule_item.set_cell_mode(0, TreeItem.CELL_MODE_CUSTOM)
+	rule_item.set_text(0, property)
+	rule_item.set_editable(0, true)
+	rule_item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+	
+	var section_color = get_color("prop_section", "Editor")
+	rule_item.set_custom_bg_color(0, section_color)
+	rule_item.set_custom_bg_color(1, section_color)
+	
+	
+	var value_item = tree.create_item(rule_item)
+	value_item.set_text(0, "Critical value")
+	value_item.set_tooltip(0, "When property equals this value, a warning will be shown")
+	value_item.set_editable(1, true)
+	value_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
+	value_item.set_checked(1, critical_value)
+	
+	var description_item = tree.create_item(rule_item)
+	description_item.set_text(0, "Description")
+	description_item.set_tooltip(0, "Description of the rule")
+	description_item.set_editable(1, true)
+	description_item.set_text(1, description)
+	
 
 # change icon and text if a new class was selected
 # TODO: change properties
@@ -89,7 +108,7 @@ func _on_ClassPopupMenu_index_pressed(index):
 	
 	item.set_text(0, class_popup.get_item_text(index))
 	item.set_icon(0, class_popup.get_item_icon(index))
-	item.add_button(1, get_icon("Remove", "EditorIcons"), -1, false, "Remove this rule")
+	item.add_button(1, delete_texture, 0, false, "Remove this rule")
 	
 	
 	var category_color = get_color("prop_category", "Editor")
@@ -101,7 +120,14 @@ func _on_ClassPopupMenu_index_pressed(index):
 
 
 func _on_Tree_button_pressed(item, column, id):
-	item.free()
+	var texture = item.get_button(column, id)
+	
+	# match the texture to find out which action was pressed
+	match texture:
+		delete_texture:
+			item.free()
+		add_texture:
+			add_rule(item, "", false, "")
 	_on_rules_updated()
 
 
@@ -112,24 +138,26 @@ func _on_AddRule_pressed():
 	classes.append("Node")
 	classes.sort()
 	for c in classes:
-		if ClassDB.can_instance(c):
+		if not warning_rules.has(c):
 			var icon = get_icon(c, "EditorIcons")
 			class_popup.add_icon_item(icon, c)
 	class_popup.popup()
 	class_popup.set_position(get_global_mouse_position())
 
 
+# whenever the rules are updated from outside the tree should be updated
 func _set_warning_rules(new_rules):
 	warning_rules = new_rules
 	call_deferred("setup_tree")
 
 
+# to be called whenever the rules tree is modified
 func _on_rules_updated():
 	var rules = get_rules_dictionary()
-	print(rules)
 	emit_signal("warning_rules_updated", rules)
 
 
+# parse the rules tree into a dictionary
 func get_rules_dictionary():
 	var dictionary = {}
 	
@@ -164,8 +192,12 @@ func get_rules_dictionary():
 	return dictionary
 
 func _on_Tree_item_edited():
-	_on_rules_updated()
+	# compare old and new rules, only update if they changed
+	if to_json(warning_rules) != to_json(get_rules_dictionary()):
+		_on_rules_updated()
 
 
 func _on_ResetRules_pressed():
 	emit_signal("warning_rules_reset")
+
+
